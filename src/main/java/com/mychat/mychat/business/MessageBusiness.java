@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mychat.mychat.dto.ChatMessageDTO;
 import com.mychat.mychat.entities.SendedMessage;
@@ -12,6 +13,7 @@ import com.mychat.mychat.entities.User;
 import com.mychat.mychat.repositories.SendedMessageRepository;
 
 @Service
+@Transactional
 public class MessageBusiness {
 	@Autowired
 	private SendedMessageRepository sendedMessageRepository;
