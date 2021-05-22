@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mychat.mychat.business.MessageBusiness;
 import com.mychat.mychat.dto.ChatMessageDTO;
+import com.mychat.mychat.dto.MessageIdsToUpdateDTO;
 import com.mychat.mychat.entities.SendedMessage;
 
 
@@ -39,4 +40,16 @@ public class SendedMessageController {
 	public ResponseEntity<ArrayList<SendedMessage>> getMessagesBySenderAndReceiverOrderedByDate(@RequestParam Integer senderId, @RequestParam Integer receiverId){
 		return ResponseEntity.ok(messageBusiness.getMessagesBySenderAndReceiverOrderedByDate(senderId, receiverId));
 	}
+	
+	@RequestMapping(value = "/getSenderNotReadedMessages", method = RequestMethod.GET)
+	public ResponseEntity<Integer> getSenderNotReadedMessages(@RequestParam Integer senderId, @RequestParam Integer receiverId){
+		return ResponseEntity.ok(messageBusiness.getSenderNotReadedMessages(senderId, receiverId));
+	}
+
+	@RequestMapping(value = "/updateMessagesToReadedBySenderAndReceiver", method = RequestMethod.GET)
+	public ResponseEntity<Boolean> updateMessagesToReadedBySenderAndReceiver(@RequestParam Integer senderId, @RequestParam Integer receiverId){
+		messageBusiness.updateMessagesToReadedBySenderAndReceiver(senderId, receiverId);
+		return ResponseEntity.ok(true);
+	}
+
 }

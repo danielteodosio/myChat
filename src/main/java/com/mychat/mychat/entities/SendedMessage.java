@@ -25,6 +25,9 @@ public class SendedMessage {
 	private Date sendedMessageDate;
 	@Column(name = "sended_message_text")
 	private String sendedMessageText;
+	@Column(name = "was_readed")
+	private String wasMessageReaded;
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "user_sended_message")
@@ -63,5 +66,11 @@ public class SendedMessage {
 	}
 	public void setUserContactSendedMessage(User userContactSendedMessage) {
 		this.userContactSendedMessage = userContactSendedMessage;
+	}
+	public String getWasMessageReaded(){
+		return wasMessageReaded;
+	}
+	public void setWasMessageReaded(String wasMessageReaded){
+		this.wasMessageReaded = wasMessageReaded;
 	}
 }

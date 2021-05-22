@@ -1,8 +1,10 @@
 package com.mychat.mychat.business;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ public class MessageBusiness {
 	private SendedMessageRepository sendedMessageRepository;
 	@Autowired
 	private UserBusiness userBusiness;
+
+	private final String READED = "R";
+	private final String NOT_READED = "NR";
 	
 	public void saveMessage(ChatMessageDTO chatMessageDTO) {
 		
@@ -27,7 +32,8 @@ public class MessageBusiness {
  		sendedMessage.setSendedMessageDate(chatMessageDTO.getSendDate());
  		sendedMessage.setSendedMessageText(chatMessageDTO.getMessageText());
  		sendedMessage.setUserSendedMessage(sender);
- 		sendedMessage.setUserContactSendedMessage(receiver);
+		sendedMessage.setUserContactSendedMessage(receiver);
+		sendedMessage.setWasMessageReaded(this.NOT_READED);
  		sendedMessageRepository.save(sendedMessage);
 	}
 	
@@ -37,5 +43,22 @@ public class MessageBusiness {
 	
 	public ArrayList<SendedMessage> getAllMessages(){
 		return (ArrayList<SendedMessage>) sendedMessageRepository.findAll();
+	}
+
+	public Integer getSenderNotReadedMessages(Integer senderId, Integer receiverId){
+		Integer numberOfNotReadedMessagesFromSender = 0;
+		List<SendedMessage> receivedNotReadedMessages = new ArrayList<SendedMessage>();
+		receivedNotReadedMessages = sendedMessageRepository.getMessagesSendedFromSendedToReceiver(senderId, receiverId);
+
+		for(SendedMessage receivedNotReadedMessage : receivedNotReadedMessages){
+			if(receivedNotReadedMessage.getWasMessageReaded().equals(this.NOT_READED)){
+				numberOfNotReadedMessagesFromSender++;
+			}
+		}
+		return numberOfNotReadedMessagesFromSender;
+	}
+
+	public void updateMessagesToReadedBySenderAndReceiver(Integer senderId, Integer receiverId){
+		sendedMessageRepository.updateMessagesToReadedBySenderAndReceiver(senderId, receiverId);
 	}
 }
