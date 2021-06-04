@@ -1,7 +1,10 @@
 package com.mychat.mychat.business;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Tuple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mychat.mychat.dto.ChatMessageDTO;
+import com.mychat.mychat.dto.NotReadedMessagesDTO;
 import com.mychat.mychat.entities.SendedMessage;
 import com.mychat.mychat.entities.User;
 import com.mychat.mychat.repositories.SendedMessageRepository;
@@ -60,5 +64,14 @@ public class MessageBusiness {
 
 	public void updateMessagesToReadedBySenderAndReceiver(Integer senderId, Integer receiverId){
 		sendedMessageRepository.updateMessagesToReadedBySenderAndReceiver(senderId, receiverId);
+	}
+	
+	public ArrayList<NotReadedMessagesDTO> getNotReadedMessageByUserId(Integer receiverId){
+		ArrayList<NotReadedMessagesDTO> dtoList= new ArrayList<NotReadedMessagesDTO>();
+		ArrayList<Tuple> tuples  = sendedMessageRepository.getNotReadedMessageByUserId(receiverId);
+		for(Tuple tuple : tuples) {
+			dtoList.add(new NotReadedMessagesDTO(((BigDecimal)tuple.get(0)).longValue(), ((BigDecimal)tuple.get(1)).longValue()));
+		}
+		return dtoList;
 	}
 }

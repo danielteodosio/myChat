@@ -3,6 +3,7 @@ package com.mychat.mychat.resources;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mychat.mychat.business.MessageBusiness;
 import com.mychat.mychat.dto.ChatMessageDTO;
 import com.mychat.mychat.dto.MessageIdsToUpdateDTO;
+import com.mychat.mychat.dto.NotReadedMessagesDTO;
 import com.mychat.mychat.entities.SendedMessage;
 
 
@@ -50,6 +52,12 @@ public class SendedMessageController {
 	public ResponseEntity<Boolean> updateMessagesToReadedBySenderAndReceiver(@RequestParam Integer senderId, @RequestParam Integer receiverId){
 		messageBusiness.updateMessagesToReadedBySenderAndReceiver(senderId, receiverId);
 		return ResponseEntity.ok(true);
+	}
+	
+	@RequestMapping(value = "/getNotReadedMessageByUserId", method = RequestMethod.GET)
+	public ResponseEntity<ArrayList<NotReadedMessagesDTO>> getNotReadedMessageByUserId(@RequestParam("receiverId") Integer receiverId){
+		ArrayList<NotReadedMessagesDTO> response = messageBusiness.getNotReadedMessageByUserId(receiverId);
+		return new ResponseEntity<ArrayList<NotReadedMessagesDTO>>(response, HttpStatus.OK);
 	}
 
 }
